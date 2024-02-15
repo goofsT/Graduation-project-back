@@ -7,7 +7,6 @@ import java.io.Serializable;
 
 public class Device implements Serializable {
     private static final long serialVersionUID = 1L;
-    @TableId(value = "id", type = IdType.AUTO)
     private Integer deviceId;
     private String deviceName;
     private String deviceType;
