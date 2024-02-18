@@ -25,12 +25,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if(request.getRequestURI().equals("/user/login")||request.getRequestURI().equals("/user/register")||request.getRequestURI().equals("/user/resetPwd")) {
             filterChain.doFilter(request, response);
         }else if(token!=null&&validateToken(token)){
-            logger.info("token验证成功");
             Authentication auth = authenticationService.buildAuthenticationFromToken(token);
             SecurityContextHolder.getContext().setAuthentication(auth);
             filterChain.doFilter(request, response);
         }else{
-            logger.info("token验证失败");
             writeErrorResponse(response, ResponseData.error(403, "Unauthorized token"));
         }
     }

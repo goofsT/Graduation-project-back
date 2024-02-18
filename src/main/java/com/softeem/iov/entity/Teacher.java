@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class Teacher implements Serializable {
     private static final long serialVersionUID = 1L;
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId
     private Integer teacherId;
     private String teacherName;
     private String teacherTitle;

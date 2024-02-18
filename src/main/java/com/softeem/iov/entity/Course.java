@@ -1,6 +1,7 @@
 package com.softeem.iov.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 
 import java.io.Serializable;
@@ -12,9 +13,19 @@ public class Course implements Serializable {
     private String courseTimeStart;
     private String courseTimeEnd;
     private Integer classId;
-    private Integer  students;
     private Integer teacherId;
     private Integer roomId;
+
+    @TableField(exist = false)
+    private Teacher teacher;
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
+
 
     public Integer getCourseId() {
         return courseId;
@@ -56,13 +67,7 @@ public class Course implements Serializable {
         this.classId = classId;
     }
 
-    public Integer getStudents() {
-        return students;
-    }
 
-    public void setStudents(Integer students) {
-        this.students = students;
-    }
 
     public Integer getTeacherId() {
         return teacherId;
@@ -88,7 +93,7 @@ public class Course implements Serializable {
                 ", courseTimeStart='" + courseTimeStart + '\'' +
                 ", courseTimeEnd='" + courseTimeEnd + '\'' +
                 ", classId=" + classId +
-                ", students=" + students +
+                ", teacher" + teacher +
                 ", teacherId=" + teacherId +
                 ", roomId=" + roomId +
                 '}';
