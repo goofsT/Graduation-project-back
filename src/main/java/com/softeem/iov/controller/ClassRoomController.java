@@ -45,7 +45,6 @@ public class ClassRoomController {
     public ResponseData getClassRoomByFloor(Integer building, String floor) {
         //如果教室的status=1表示正在使用中
         List rooms = classRoomService.getClassRoomByFloor(building, floor);
-        System.out.println(rooms);
         //查询状态为1的教室的课程信息
         for (int i = 0; i < rooms.size(); i++) {
            if (((ClassRoom) rooms.get(i)).getStatus().equals("1")) {

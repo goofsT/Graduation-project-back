@@ -23,7 +23,7 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     public List<Device> getAllRepairDevice() {
         //deviceStatus=1表示设备维修中
         LambdaQueryWrapper<Device> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Device::getDeviceStatus, 1); // 指定test字段等于1的条件
+        queryWrapper.eq(Device::getDeviceStatus, 2); // 指定test字段等于1的条件
 
         // 使用IService的list方法执行查询
         return baseMapper.selectList(queryWrapper);
