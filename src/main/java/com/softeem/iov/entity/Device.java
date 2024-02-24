@@ -11,6 +11,7 @@ public class Device implements Serializable {
     private String deviceName;
     private String deviceType;
     private String deviceStatus;
+    private String modelName;
     private Integer roomId;
     private Integer buildingId;
     private Integer floorNum;
@@ -23,9 +24,18 @@ public class Device implements Serializable {
                 ", deviceType='" + deviceType + '\'' +
                 ", deviceStatus='" + deviceStatus + '\'' +
                 ", roomId=" + roomId +
+                ", modelName='" + modelName + '\'' +
                 ", buildingId=" + buildingId +
                 ", floorNum=" + floorNum +
                 '}';
+    }
+
+    public String getModelName() {
+        return modelName;
+    }
+
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
     }
 
     public Integer getDeviceId() {

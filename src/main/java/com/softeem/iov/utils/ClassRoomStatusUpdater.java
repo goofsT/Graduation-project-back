@@ -1,5 +1,6 @@
 package com.softeem.iov.utils;
 
+import com.softeem.iov.entity.ClassRoom;
 import com.softeem.iov.entity.Course;
 import com.softeem.iov.service.ClassRoomService;
 import com.softeem.iov.service.CourseService;
@@ -25,10 +26,18 @@ public class ClassRoomStatusUpdater {
     @Scheduled(fixedRate = 60000) // 每分钟执行一次  定时根据课程表更新教室状态
     public void updateClassRoomStatus() {
         List<Course> coursesToUpdate = courseService.getCourseByNow();
-        coursesToUpdate.forEach(course -> {
-            // 更新教室状态为 "1"使用中
-            classRoomService.updateOneClassRoomStatus(course.getRoomId(), "1");
+        List<ClassRoom> classRooms = classRoomService.getAllClassRoomInfo();
+        classRooms.forEach(room -> {
+            if (!"2".equals(room.getStatus())) { // 检查教室是否不在维修状态
+                classRoomService.resetClassRoomStatus(room.getRoomId());
+            }
         });
+        if(!coursesToUpdate.isEmpty()){
+            coursesToUpdate.forEach(course -> {
+                // 更新教室状态为 "1"使用中
+                classRoomService.updateOneClassRoomStatus(course.getRoomId(), "1");
+            });
+        }
     }
 
 }

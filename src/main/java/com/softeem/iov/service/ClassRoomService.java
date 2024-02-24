@@ -17,6 +17,7 @@ public interface ClassRoomService extends IService<ClassRoom> {
     //更新单个教室状态
     public boolean updateOneClassRoomStatus(Integer roomId, String status);
 
+    public boolean resetClassRoomStatus(Integer roomId);
 
     List getClassRoomByFloor(Integer buildingId, String floor);
 }

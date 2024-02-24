@@ -50,6 +50,14 @@ public class ClassRoomServiceImpl extends ServiceImpl<ClassRoomMapper, ClassRoom
         return baseMapper.updateById(classRoom) > 0;
     }
 
+    @Override
+    public boolean resetClassRoomStatus(Integer roomId) {
+        ClassRoom classRoom = new ClassRoom();
+        classRoom.setRoomId(roomId);
+        classRoom.setStatus("0");
+        return baseMapper.updateById(classRoom) > 0;
+    }
+
 
     @Override
     public List getClassRoomByFloor(Integer buildingId, String floor) {
