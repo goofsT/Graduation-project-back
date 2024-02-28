@@ -15,10 +15,19 @@ public class ClassRoom implements Serializable {
     private String studentNum;
     private String floorNum;
     private String buildingId;
+
+    private String positionModel;
     private String status;
     //课程信息，数据库中没有这个字段，只是为了方便前端展示
     @TableField(exist = false)
     private Course course;
+
+    public String getPositionModel() {
+        return positionModel;
+    }
+    public void setPositionModel(String positionModel) {
+        this.positionModel = positionModel;
+    }
 
     public Integer getRoomId() {
         return roomId;
@@ -76,6 +85,7 @@ public class ClassRoom implements Serializable {
                 ", studentNum='" + studentNum + '\'' +
                 ", course='" + course + '\'' +
                 ", floorNum='" + floorNum + '\'' +
+                ", positionModel='" + positionModel + '\'' +
                 ", buildingId='" + buildingId + '\'' +
                 ", status='" + status + '\'' +
                 '}';

@@ -30,6 +30,8 @@ public class ClassRoomStatusUpdater {
         classRooms.forEach(room -> {
             if (!"2".equals(room.getStatus())) { // 检查教室是否不在维修状态
                 classRoomService.resetClassRoomStatus(room.getRoomId());
+            }else{
+
             }
         });
         if(!coursesToUpdate.isEmpty()){

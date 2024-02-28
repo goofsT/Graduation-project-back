@@ -16,6 +16,8 @@ public class Device implements Serializable {
     private Integer buildingId;
     private Integer floorNum;
 
+    private String modelPosition;
+
     @Override
     public String toString() {
         return "Device{" +
@@ -25,11 +27,18 @@ public class Device implements Serializable {
                 ", deviceStatus='" + deviceStatus + '\'' +
                 ", roomId=" + roomId +
                 ", modelName='" + modelName + '\'' +
+                ", modelPosition='" + modelPosition + '\'' +
                 ", buildingId=" + buildingId +
                 ", floorNum=" + floorNum +
                 '}';
     }
 
+    public String getModelPosition() {
+        return modelPosition;
+    }
+    public void setModelPosition(String modelPosition) {
+        this.modelPosition = modelPosition;
+    }
     public String getModelName() {
         return modelName;
     }
