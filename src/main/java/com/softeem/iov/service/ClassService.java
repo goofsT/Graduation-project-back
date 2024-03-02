@@ -9,4 +9,6 @@ public interface ClassService extends IService<Sclass> {
     //获取所有班级
     List<Sclass> getAllClass();
 
+    Sclass getClassById(Integer classId);
+
 }

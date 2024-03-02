@@ -14,4 +14,11 @@ public class ClassServiceImpl extends ServiceImpl<SclassMapper, Sclass> implemen
     public List<Sclass> getAllClass() {
         return this.baseMapper.selectList(null);
     }
+
+    @Override
+    public Sclass getClassById(Integer classId) {
+        return this.baseMapper.selectById(classId);
+    }
+
+
 }

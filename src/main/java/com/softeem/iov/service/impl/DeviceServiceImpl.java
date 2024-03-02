@@ -28,4 +28,32 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         // 使用IService的list方法执行查询
         return baseMapper.selectList(queryWrapper);
     }
+
+    @Override
+    public Boolean updateStatus(Integer deviceId,String deviceStatus) {
+        Device device = this.selectDeviceById(deviceId);
+        if(device!=null){
+            device.setDeviceStatus(deviceStatus);
+            Integer result=baseMapper.updateById(device);
+            return result>0;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public Boolean deleteDevice(Integer deviceId) {
+        Integer result=baseMapper.deleteById(deviceId);
+        return result>0;
+    }
+
+    @Override
+    public Device selectDeviceById(Integer deviceId) {
+        Device device= baseMapper.selectById(deviceId);
+        if(device!=null){
+            return device;
+        }else{
+            return null;
+        }
+    }
 }

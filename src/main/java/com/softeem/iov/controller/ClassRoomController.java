@@ -2,12 +2,16 @@ package com.softeem.iov.controller;
 
 import com.softeem.iov.entity.ClassRoom;
 import com.softeem.iov.entity.Course;
+import com.softeem.iov.entity.Sclass;
 import com.softeem.iov.entity.Teacher;
 import com.softeem.iov.service.ClassRoomService;
+import com.softeem.iov.service.ClassService;
 import com.softeem.iov.service.CourseService;
 import com.softeem.iov.service.TeacherService;
 import com.softeem.iov.utils.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
@@ -18,6 +22,8 @@ public class ClassRoomController {
     private ClassRoomService classRoomService;
     @Autowired
     private CourseService courseService;
+    @Autowired
+    private ClassService classService;
     @Autowired
     private TeacherService teacherService;
     //获取所有教室信息
@@ -52,12 +58,24 @@ public class ClassRoomController {
                if(course==null){
                    continue;
                }
+               Sclass sclass = classService.getClassById(course.getClassId());
                Teacher teacher = teacherService.getTeacherById(course.getTeacherId());
                course.setTeacher(teacher);
+               course.setSclass(sclass);
                ((ClassRoom) rooms.get(i)).setCourse(course);
            }
         }
         return ResponseData.success(rooms);
+    }
+
+    @PostMapping("/updateClassRoomStatus")
+    public ResponseData updateClassRoomStatus(@RequestBody ClassRoom classRoom) {
+        Boolean res = classRoomService.updateOneClassRoomStatus(classRoom.getRoomId(), classRoom.getStatus());
+        if (res) {
+            return ResponseData.success(null);
+        } else {
+            return ResponseData.error(400, "设置失败");
+        }
     }
 
 

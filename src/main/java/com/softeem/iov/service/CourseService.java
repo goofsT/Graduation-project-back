@@ -19,4 +19,15 @@ public interface CourseService extends IService<Course> {
 
     //获取当前时间段的课程信息
     public List getCourseByNow();
+
+    public List getCourseBySoon();
+
+    //删除课程
+    public boolean deleteCourse(Integer courseId);
+
+    //添加课程
+    public boolean addCourse(Course course);
+
+    //修改课程信息
+    public boolean updateCourse(Course course);
 }

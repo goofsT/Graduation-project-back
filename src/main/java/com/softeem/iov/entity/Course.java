@@ -19,6 +19,9 @@ public class Course implements Serializable {
     @TableField(exist = false)
     private Teacher teacher;
 
+    @TableField(exist = false)
+    private Sclass sclass;
+
     public Teacher getTeacher() {
         return teacher;
     }
@@ -26,6 +29,12 @@ public class Course implements Serializable {
         this.teacher = teacher;
     }
 
+    public Sclass getSclass() {
+        return sclass;
+    }
+    public void setSclass(Sclass sclass) {
+        this.sclass = sclass;
+    }
 
     public Integer getCourseId() {
         return courseId;
@@ -94,6 +103,7 @@ public class Course implements Serializable {
                 ", courseTimeEnd='" + courseTimeEnd + '\'' +
                 ", classId=" + classId +
                 ", teacher" + teacher +
+                ", sclass" + sclass +
                 ", teacherId=" + teacherId +
                 ", roomId=" + roomId +
                 '}';
