@@ -68,5 +68,29 @@ public class ClassRoomServiceImpl extends ServiceImpl<ClassRoomMapper, ClassRoom
         return baseMapper.selectList(queryWrapper);
     }
 
+    @Override
+    public List<ClassRoom> getClassRoomFreeByTime(String time) {
+        //获取当前时间段的课程信息
+        List<Course> courses = courseService.getCourseByTime(time);
+        //获取所有教室信息
+        List<ClassRoom> classRooms = getAllClassRoomInfo();
+        //获取当前时间段的教室信息
+        if(courses.size()!=0){
+            for (int i = 0; i < courses.size(); i++) {
+                for (int j = 0; j < classRooms.size(); j++) {
+                    if (courses.get(i).getRoomId().equals(classRooms.get(j).getRoomId())) {
+                        classRooms.remove(j);
+                    }
+                }
+            }
+            classRooms.forEach(classRoom -> {
+                if(classRoom.getStatus().equals("2")) {
+                    classRooms.remove(classRoom);
+                }
+            });
+        }
+        return classRooms;
+    }
+
 
 }

@@ -11,4 +11,13 @@ public interface ClassService extends IService<Sclass> {
 
     Sclass getClassById(Integer classId);
 
+    //添加班级
+    boolean addClass(Sclass sclass);
+
+    //删除班级
+    boolean deleteClass(Integer classId);
+
+    //修改班级信息
+    boolean updateClass(Sclass sclass);
+
 }

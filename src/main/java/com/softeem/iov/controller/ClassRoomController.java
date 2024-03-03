@@ -10,10 +10,8 @@ import com.softeem.iov.service.CourseService;
 import com.softeem.iov.service.TeacherService;
 import com.softeem.iov.utils.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -78,6 +76,9 @@ public class ClassRoomController {
         }
     }
 
-
-
+    @RequestMapping("/getClassRoomFreeByTime")
+    public ResponseData getClassRoomFreeByTime(@RequestParam String time) {
+        List<ClassRoom> classRooms = classRoomService.getClassRoomFreeByTime(time);
+        return ResponseData.success(classRooms);
+    }
 }

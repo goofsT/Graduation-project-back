@@ -37,12 +37,18 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public List getCourseByTime(String time) {
-        //根据时间，判断是否在courseTimeStart和courseTimeEnd之间，返回符合条件的课程信息
-        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
-        queryWrapper.le("course_time_start", time);
-        queryWrapper.ge("course_time_end", time);
-        return baseMapper.selectList(queryWrapper);
+        //time格式为yyyy-MM-dd HH:mm:ss
 
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("course_time_start", time);
+        List<Course> courses= baseMapper.selectList(queryWrapper);
+        if(courses.size() != 0){
+            courses.forEach(course -> {
+                course.setTeacher(teacherService.getTeacherById(course.getTeacherId()));
+                course.setSclass(classService.getClassById(course.getClassId()));
+            });
+        }
+        return courses;
     }
 
     @Override

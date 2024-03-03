@@ -3,10 +3,7 @@ import com.softeem.iov.entity.Course;
 import com.softeem.iov.service.CourseService;
 import com.softeem.iov.utils.ResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -54,6 +51,12 @@ public class CourseController {
         } else {
             return ResponseData.error(400,"修改失败");
         }
+    }
+
+    @RequestMapping("/getCourseByTime")
+    public ResponseData getCourseByTime(@RequestParam String time) {
+        List<Course> courses= courseService.getCourseByTime(time);
+        return ResponseData.success(courses);
     }
 }
 

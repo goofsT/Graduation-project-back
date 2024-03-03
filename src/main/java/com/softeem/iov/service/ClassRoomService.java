@@ -20,4 +20,7 @@ public interface ClassRoomService extends IService<ClassRoom> {
     public boolean resetClassRoomStatus(Integer roomId);
 
     List getClassRoomByFloor(Integer buildingId, String floor);
+
+    //某时段空间教室
+    List <ClassRoom> getClassRoomFreeByTime(String  time);
 }

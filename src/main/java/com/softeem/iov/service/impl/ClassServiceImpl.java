@@ -20,5 +20,20 @@ public class ClassServiceImpl extends ServiceImpl<SclassMapper, Sclass> implemen
         return this.baseMapper.selectById(classId);
     }
 
+    @Override
+    public boolean addClass(Sclass sclass) {
+        return this.baseMapper.insert(sclass) > 0;
+    }
+
+    @Override
+    public boolean deleteClass(Integer classId) {
+        return this.baseMapper.deleteById(classId) > 0;
+    }
+
+    @Override
+    public boolean updateClass(Sclass sclass) {
+        return this.baseMapper.updateById(sclass) > 0;
+    }
+
 
 }
