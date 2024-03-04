@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class ClassRoom implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer roomId;
     private String roomName;
     private String studentNum;

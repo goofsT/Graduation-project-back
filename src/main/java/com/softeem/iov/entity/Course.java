@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class Course implements Serializable {
     private static final long serialVersionUID = 1L;
-    @TableId
+    @TableId(type= IdType.AUTO)
     private Integer courseId;
     private String courseName;
     private String courseTimeStart;

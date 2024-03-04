@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -38,9 +39,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     @Override
     public List getCourseByTime(String time) {
         //time格式为yyyy-MM-dd HH:mm:ss
-
         QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("course_time_start", time);
+        queryWrapper.le("course_time_start", time) // course_time_start <= time
+                .gt("course_time_end", time);  // course_time_end >= time
         List<Course> courses= baseMapper.selectList(queryWrapper);
         if(courses.size() != 0){
             courses.forEach(course -> {

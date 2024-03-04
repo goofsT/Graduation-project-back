@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class Sclass implements Serializable {
     private static final long serialVersionUID = 1L;
-    @TableId
+    @TableId(type = IdType.AUTO)
     private Integer classId;
     private String className;
     private Integer classNum;
