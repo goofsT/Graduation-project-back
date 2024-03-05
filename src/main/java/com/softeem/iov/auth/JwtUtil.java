@@ -2,6 +2,8 @@ package com.softeem.iov.auth;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.softeem.iov.entity.User;
+
 import java.util.Date;
 
 
@@ -15,10 +17,11 @@ public class JwtUtil {
     private static final long EXPIRE_TIME = 3600000*24; // 1h
 
     // 生成token
-    public static String generateToken(String subject) {
+    public static String generateToken(User user) {
         Date expiryDate = new Date(System.currentTimeMillis() + EXPIRE_TIME);
         return JWT.create()
-                .withSubject(subject)
+                .withSubject(user.getUsername())
+                .withClaim("userId", user.getId())
                 .withExpiresAt(expiryDate)
                 .sign(ALGORITHM);
     }
@@ -27,6 +30,18 @@ public class JwtUtil {
     public static String getUsername(String token) {
         DecodedJWT jwt = JWT.decode(token);
         return jwt.getSubject();
+    }
+
+    public static User getUser(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+        User user = new User();
+        user.setUsername(jwt.getSubject());
+        return user;
+    }
+
+    public static Integer getUserId(String token) {
+        DecodedJWT jwt = JWT.decode(token);
+        return jwt.getClaim("userId").asInt();
     }
 
     public String getUsernameFromToken(String token) {

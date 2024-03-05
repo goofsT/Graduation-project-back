@@ -11,9 +11,11 @@ public class Sclass implements Serializable {
     private Integer classId;
     private String className;
     private Integer classNum;
-    private Integer class_counselor;
+    private String classCounselor;
 
     private String counselorNumber;
+
+    private String academy;
 
     @Override
     public String toString() {
@@ -22,8 +24,16 @@ public class Sclass implements Serializable {
                 ", className='" + className + '\'' +
                 ", classNum=" + classNum +
                 ", counselorNumber=" + counselorNumber +
-                ", class_counselor=" + class_counselor +
+                ", classCounselor=" + classCounselor +
+                ", academy=" + academy +
                 '}';
+    }
+
+    public String getAcademy() {
+        return academy;
+    }
+    public void setAcademy(String academy) {
+        this.academy = academy;
     }
 
     public Integer getClassId() {
@@ -57,11 +67,11 @@ public class Sclass implements Serializable {
         this.classNum = classNum;
     }
 
-    public Integer getClass_counselor() {
-        return class_counselor;
+    public String getClassCounselor() {
+        return classCounselor;
     }
 
-    public void setClass_counselor(Integer class_counselor) {
-        this.class_counselor = class_counselor;
+    public void setClassCounselor(String classCounselor) {
+        this.classCounselor = classCounselor;
     }
 }

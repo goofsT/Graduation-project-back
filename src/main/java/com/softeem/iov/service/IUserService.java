@@ -15,10 +15,16 @@ import java.util.List;
 public interface IUserService extends IService<User> {
     List<User> getUserList();
 
+    User getUserById(Integer id);
+
     User login(String username, String password);
 
     //注册
     String register(User user);
 
     String resetPwd(User user);
+
+    Boolean deleteUser(Integer userId);
+
+    Boolean setRole(Integer userId,String permission);
 }

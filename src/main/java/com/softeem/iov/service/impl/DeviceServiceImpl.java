@@ -3,16 +3,30 @@ package com.softeem.iov.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.softeem.iov.auth.AuthenticationService;
+import com.softeem.iov.auth.UserUtils;
+import com.softeem.iov.entity.Affair;
 import com.softeem.iov.entity.Device;
+import com.softeem.iov.entity.User;
 import com.softeem.iov.mapper.DeviceMapper;
+import com.softeem.iov.service.AffairService;
 import com.softeem.iov.service.DeviceService;
+import com.softeem.iov.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements DeviceService {
+    @Autowired
+    private AffairService affairService;
+    @Autowired
+    private IUserService userService;
+    @Autowired
+    private AuthenticationService authenticationService;
     @Override
     public List<Device> getAllDevice() {
         List device= baseMapper.selectList(null);
@@ -32,10 +46,41 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
     @Override
     public Boolean updateStatus(Integer deviceId,String deviceStatus) {
         Device device = this.selectDeviceById(deviceId);
+        String oldStatus=device.getDeviceStatus();
         if(device!=null){
             device.setDeviceStatus(deviceStatus);
             Integer result=baseMapper.updateById(device);
-            return result>0;
+            if(result>0) {
+                if(oldStatus.equals("2")&& !deviceStatus.equals("2")){
+                    Integer userId= UserUtils.getUserInfo();
+                    if(userId!=null){
+                        Affair affair = new Affair();
+                        affair.setRecordUserId(userId);
+                        LocalDateTime now = LocalDateTime.now();
+                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                        String formattedCurrentTime = now.format(formatter);
+                        affair.setAffairTime(formattedCurrentTime);
+                        affair.setDescription(device.getDeviceName()+"设备维修完成");
+                        affairService.commitAffair(affair);
+                    }
+                }
+               if(deviceStatus.equals("2")){
+                   Integer userId= UserUtils.getUserInfo();
+                   if(userId!=null){
+                       Affair affair = new Affair();
+                       affair.setRecordUserId(userId);
+                       LocalDateTime now = LocalDateTime.now();
+                       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                       String formattedCurrentTime = now.format(formatter);
+                       affair.setAffairTime(formattedCurrentTime);
+                       affair.setDescription(device.getDeviceName()+"设备状态设置为维修");
+                       affairService.commitAffair(affair);
+                   }
+               }
+                return true;
+            }else{
+                return false;
+            }
         }else{
             return false;
         }
@@ -43,8 +88,22 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
 
     @Override
     public Boolean deleteDevice(Integer deviceId) {
+        Device d=this.getById(deviceId);
         Integer result=baseMapper.deleteById(deviceId);
-        return result>0;
+        if(result>0) {
+            Affair affair = new Affair();
+            Integer userId= UserUtils.getUserInfo();
+            affair.setRecordUserId(userId);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedCurrentTime = now.format(formatter);
+            affair.setAffairTime(formattedCurrentTime);
+            affair.setDescription(d.getDeviceName()+"设备被删除");
+            affairService.commitAffair(affair);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override

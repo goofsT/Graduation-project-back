@@ -1,12 +1,17 @@
 package com.softeem.iov.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.softeem.iov.entity.Affair;
 import com.softeem.iov.entity.User;
 import com.softeem.iov.mapper.UserMapper;
+import com.softeem.iov.service.AffairService;
 import com.softeem.iov.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
@@ -19,11 +24,17 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
+    @Autowired
+    private AffairService affairService;
     @Override
     public List<User> getUserList() {
-        //去除password字段
-        List<User> userList = this.baseMapper.selectList(new QueryWrapper<User>().select(User.class, info -> !info.getColumn().equals("password")));
+        List<User> userList = this.baseMapper.selectList(null);
         return userList;
+    }
+
+    @Override
+    public User getUserById(Integer id) {
+        return this.baseMapper.selectById(id);
     }
 
     @Override
@@ -64,5 +75,45 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
                return "修改失败";
            }
        }
+    }
+
+    @Override
+    public Boolean deleteUser(Integer userId) {
+        Integer result = this.baseMapper.deleteById(userId);
+        if(result>0){
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+
+    @Override
+    public Boolean setRole(Integer userId, String permission) {
+        User user = this.baseMapper.selectById(userId);
+        user.setPremission(permission);
+        int update = this.baseMapper.updateById(user);
+        if(update>0) {
+            Affair affair = new Affair();
+            affair.setRecordUserId(userId);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedCurrentTime = now.format(formatter);
+            affair.setAffairTime(formattedCurrentTime);
+            affair.setDescription(user.getRealname()+"用户权限设置为"+this.getPermission(permission));
+            affairService.commitAffair(affair);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public String getPermission(String per){
+        if(per.equals("0"))
+            return "管理员";
+        else if(per.equals("1"))
+            return "普通用户";
+        else
+            return "维修人员";
     }
 }

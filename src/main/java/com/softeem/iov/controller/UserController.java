@@ -30,7 +30,8 @@ public class UserController {
         if(user==null){
             return ResponseData.error(400,"用户名或密码错误");
         }else{
-            String token= authenticationService.generateJwtToken(username);
+            String token= authenticationService.generateJwtToken(user);
+            user.setPassword(null);
             if(token==null){
                 return ResponseData.serverError();
             }else{
@@ -85,6 +86,26 @@ public class UserController {
             return ResponseData.error(400,msg);
         }else{
             return ResponseData.success(null);
+        }
+    }
+
+    @PostMapping("/deleteUser")
+    public ResponseData<User> deleteUser(@RequestBody User user){
+        Boolean result=userService.deleteUser(user.getId());
+        if(result){
+            return ResponseData.success(null);
+        }else{
+            return ResponseData.error(400,"删除失败");
+        }
+    }
+
+    @PostMapping("/setRole")
+    public ResponseData<User> setRole(@RequestBody User user){
+        Boolean result=userService.setRole(user.getId(),user.getPremission());
+        if(result){
+            return ResponseData.success(null);
+        }else{
+            return ResponseData.error(400,"设置失败");
         }
     }
 }

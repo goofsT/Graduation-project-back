@@ -10,11 +10,13 @@ public class Affair implements Serializable {
     private static final long serialVersionUID = 1L;
     @TableId(type= IdType.AUTO)
     private Integer affairId;
-    private Integer deviceId;
-    private Integer roomId;
-    private String affairType;
+
     private String affairTime;
-    private String status;
+
+    private String description;
+
+    private Integer recordUserId;
+
 
     @TableField(exist = false)
     private Device device;
@@ -29,15 +31,29 @@ public class Affair implements Serializable {
     public String toString() {
         return "Affair{" +
                 "affairId=" + affairId +
-                ", deviceId=" + deviceId +
-                ", roomId=" + roomId +
-                ", affairType='" + affairType + '\'' +
                 ", affairTime='" + affairTime + '\'' +
-                ", status='" + status + '\'' +
+                ", description='" + description + "'" +
+                ", recordUserId=" + recordUserId +
                 ", device=" + device +
                 ", classRoom=" + classRoom +
                 ", recordUser=" + recordUser +
                 '}';
+    }
+
+    public Integer getRecordUserId() {
+        return recordUserId;
+    }
+
+    public void setRecordUserId(Integer recordUserId) {
+        this.recordUserId = recordUserId;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getAffairId() {
@@ -48,44 +64,12 @@ public class Affair implements Serializable {
         this.affairId = affairId;
     }
 
-    public Integer getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(Integer deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public Integer getRoomId() {
-        return roomId;
-    }
-
-    public void setRoomId(Integer roomId) {
-        this.roomId = roomId;
-    }
-
-    public String getAffairType() {
-        return affairType;
-    }
-
-    public void setAffairType(String affairType) {
-        this.affairType = affairType;
-    }
-
     public String getAffairTime() {
         return affairTime;
     }
 
     public void setAffairTime(String affairTime) {
         this.affairTime = affairTime;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Device getDevice() {

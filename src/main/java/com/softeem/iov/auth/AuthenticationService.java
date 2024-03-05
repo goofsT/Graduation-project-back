@@ -1,5 +1,6 @@
 package com.softeem.iov.auth;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.softeem.iov.entity.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -13,11 +14,15 @@ public class AuthenticationService {
      */
     public Authentication buildAuthenticationFromToken(String token) {
         String username = JwtUtil.getUsername(token);
-        return new UsernamePasswordAuthenticationToken(username, null, null);
+        Integer userId = JwtUtil.getUserId(token);
+        User user = new User();
+        user.setId(userId);
+        user.setUsername(username);
+        return new UsernamePasswordAuthenticationToken(user, null, null);
     }
     // 生成 JWT 令牌
-    public String generateJwtToken(String username) {
-        return JwtUtil.generateToken(username);
+    public String generateJwtToken(User user) {
+        return JwtUtil.generateToken(user);
     }
 
     // 验证 JWT 令牌

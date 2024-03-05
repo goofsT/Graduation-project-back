@@ -2,21 +2,28 @@ package com.softeem.iov.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.softeem.iov.auth.UserUtils;
+import com.softeem.iov.entity.Affair;
 import com.softeem.iov.entity.ClassRoom;
 import com.softeem.iov.entity.Course;
 import com.softeem.iov.entity.Device;
 import com.softeem.iov.mapper.ClassRoomMapper;
+import com.softeem.iov.service.AffairService;
 import com.softeem.iov.service.ClassRoomService;
 import com.softeem.iov.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class ClassRoomServiceImpl extends ServiceImpl<ClassRoomMapper, ClassRoom> implements ClassRoomService {
     @Autowired
     private CourseService courseService;
+    @Autowired
+    private AffairService affairService;
 
     @Override
     public List getAllClassRoomInfo() {
@@ -47,7 +54,36 @@ public class ClassRoomServiceImpl extends ServiceImpl<ClassRoomMapper, ClassRoom
         ClassRoom classRoom = new ClassRoom();
         classRoom.setRoomId(roomId);
         classRoom.setStatus(status);
-        return baseMapper.updateById(classRoom) > 0;
+        ClassRoom room=this.getOneClass(roomId);
+        String oldStatus=room.getStatus();
+        Integer result = baseMapper.updateById(classRoom);
+        if(result > 0) {
+            if(oldStatus.equals("2") && !status.equals("2")){
+                Integer userId= UserUtils.getUserInfo();
+                Affair affair = new Affair();
+                affair.setRecordUserId(userId);
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String formattedCurrentTime = now.format(formatter);
+                affair.setAffairTime(formattedCurrentTime);
+                affair.setDescription(room.getRoomName()+"教室维修完成");
+                affairService.commitAffair(affair);
+            }
+            if(status.equals("2")){
+                Integer userId= UserUtils.getUserInfo();
+                Affair affair = new Affair();
+                affair.setRecordUserId(userId);
+                LocalDateTime now = LocalDateTime.now();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+                String formattedCurrentTime = now.format(formatter);
+                affair.setAffairTime(formattedCurrentTime);
+                affair.setDescription(room.getRoomName()+"教室状态设置为维修");
+                affairService.commitAffair(affair);
+            }
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override

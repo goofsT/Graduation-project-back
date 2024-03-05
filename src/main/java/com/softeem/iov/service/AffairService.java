@@ -13,6 +13,4 @@ public interface AffairService extends IService<Affair> {
     //根据事务id删除事务
     void deleteAffairById(Integer id);
 
-    //根据事务id修改事务状态
-    void updateAffairStatusById(Integer id, String status);
 }

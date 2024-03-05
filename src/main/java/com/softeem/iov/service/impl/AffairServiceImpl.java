@@ -23,11 +23,4 @@ public class AffairServiceImpl extends ServiceImpl<AffairMapper, Affair> impleme
         baseMapper.deleteById(id);
     }
 
-    @Override
-    public void updateAffairStatusById(Integer id, String status) {
-        Affair affair = new Affair();
-        affair.setAffairId(id);
-        affair.setStatus(status);
-        baseMapper.updateById(affair);
-    }
 }

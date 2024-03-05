@@ -2,8 +2,11 @@ package com.softeem.iov.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.softeem.iov.auth.UserUtils;
+import com.softeem.iov.entity.Affair;
 import com.softeem.iov.entity.Course;
 import com.softeem.iov.mapper.CourseMapper;
+import com.softeem.iov.service.AffairService;
 import com.softeem.iov.service.ClassService;
 import com.softeem.iov.service.CourseService;
 import com.softeem.iov.service.TeacherService;
@@ -24,6 +27,8 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Autowired
     TeacherService teacherService;
+    @Autowired
+    AffairService affairService;
     @Autowired
     ClassService classService;
     @Override
@@ -129,16 +134,59 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public boolean deleteCourse(Integer courseId) {
-        return baseMapper.deleteById(courseId) > 0;
+        Course c= this.getOneCourse(courseId);
+        Integer result = baseMapper.deleteById(courseId);
+        if(result > 0){
+            Integer userId= UserUtils.getUserInfo();
+            Affair affair = new Affair();
+            affair.setRecordUserId(userId);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedCurrentTime = now.format(formatter);
+            affair.setAffairTime(formattedCurrentTime);
+            affair.setDescription("上课时间为："+c.getCourseTimeStart()+"的"+c.getCourseName()+"课程信息删除");
+            affairService.commitAffair(affair);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
     public boolean addCourse(Course course) {
-        return baseMapper.insert(course) > 0;
+        Integer result = baseMapper.insert(course);
+        if(result > 0){
+            Integer userId= UserUtils.getUserInfo();
+            Affair affair = new Affair();
+            affair.setRecordUserId(userId);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedCurrentTime = now.format(formatter);
+            affair.setAffairTime(formattedCurrentTime);
+            affair.setDescription("上课时间为："+course.getCourseTimeStart()+"的"+course.getCourseName()+"课程信息添加");
+            affairService.commitAffair(affair);
+            return true;
+        }else{
+            return false;
+        }
     }
 
     @Override
     public boolean updateCourse(Course course) {
-        return baseMapper.updateById(course) > 0;
+        Integer result = baseMapper.updateById(course);
+        if(result > 0){
+            Integer userId= UserUtils.getUserInfo();
+            Affair affair = new Affair();
+            affair.setRecordUserId(userId);
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+            String formattedCurrentTime = now.format(formatter);
+            affair.setAffairTime(formattedCurrentTime);
+            affair.setDescription("上课时间为："+course.getCourseTimeStart()+"的"+course.getCourseName()+"课程信息更新");
+            affairService.commitAffair(affair);
+            return true;
+        }else{
+            return false;
+        }
     }
 }
