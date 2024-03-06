@@ -96,10 +96,10 @@ public class User implements Serializable {
      * 0 管理员 1值班人员 2 普通用户
      */
     private String permission;
-    public String getPremission() {
+    public String getPermission() {
         return permission;
     }
-    public void setPremission(String permission) {
+    public void setPermission(String permission) {
         this.permission = permission;
     }
 

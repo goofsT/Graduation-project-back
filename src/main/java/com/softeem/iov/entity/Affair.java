@@ -13,6 +13,12 @@ public class Affair implements Serializable {
 
     private String affairTime;
 
+    //0 设备相关 1 教室相关  2班级相关 3教师相关 4课程相关 5权限相关
+    private String affairType;
+
+    //存储相关id
+    private Integer affairTypeId;
+
     private String description;
 
     private Integer recordUserId;
@@ -32,6 +38,8 @@ public class Affair implements Serializable {
         return "Affair{" +
                 "affairId=" + affairId +
                 ", affairTime='" + affairTime + '\'' +
+                ", affairType='" + affairType + '\'' +
+                ", affairTypeId=" + affairTypeId +
                 ", description='" + description + "'" +
                 ", recordUserId=" + recordUserId +
                 ", device=" + device +
@@ -39,6 +47,14 @@ public class Affair implements Serializable {
                 ", recordUser=" + recordUser +
                 '}';
     }
+
+   public String getAffairType() {return affairType;}
+
+    public void setAffairType(String affairType) {this.affairType = affairType;}
+
+    public Integer getAffairTypeId() {return affairTypeId;}
+
+    public void setAffairTypeId(Integer affairTypeId) {this.affairTypeId = affairTypeId;}
 
     public Integer getRecordUserId() {
         return recordUserId;

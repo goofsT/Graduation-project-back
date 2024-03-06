@@ -138,14 +138,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         Integer result = baseMapper.deleteById(courseId);
         if(result > 0){
             Integer userId= UserUtils.getUserInfo();
-            Affair affair = new Affair();
-            affair.setRecordUserId(userId);
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedCurrentTime = now.format(formatter);
-            affair.setAffairTime(formattedCurrentTime);
-            affair.setDescription("上课时间为："+c.getCourseTimeStart()+"的"+c.getCourseName()+"课程信息删除");
-            affairService.commitAffair(affair);
+            affairService.commitAffair(userId,c.getCourseName()+"课程信息删除","4",courseId);
             return true;
         }else{
             return false;
@@ -157,14 +150,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         Integer result = baseMapper.insert(course);
         if(result > 0){
             Integer userId= UserUtils.getUserInfo();
-            Affair affair = new Affair();
-            affair.setRecordUserId(userId);
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedCurrentTime = now.format(formatter);
-            affair.setAffairTime(formattedCurrentTime);
-            affair.setDescription("上课时间为："+course.getCourseTimeStart()+"的"+course.getCourseName()+"课程信息添加");
-            affairService.commitAffair(affair);
+            affairService.commitAffair(userId,course.getCourseName()+"课程信息添加","4",course.getCourseId());
             return true;
         }else{
             return false;
@@ -176,14 +162,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         Integer result = baseMapper.updateById(course);
         if(result > 0){
             Integer userId= UserUtils.getUserInfo();
-            Affair affair = new Affair();
-            affair.setRecordUserId(userId);
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedCurrentTime = now.format(formatter);
-            affair.setAffairTime(formattedCurrentTime);
-            affair.setDescription("上课时间为："+course.getCourseTimeStart()+"的"+course.getCourseName()+"课程信息更新");
-            affairService.commitAffair(affair);
+            affairService.commitAffair(userId,course.getCourseName()+"课程信息更新","4",course.getCourseId());
             return true;
         }else{
             return false;

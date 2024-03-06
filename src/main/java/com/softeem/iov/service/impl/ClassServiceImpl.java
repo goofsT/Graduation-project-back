@@ -40,14 +40,7 @@ public class ClassServiceImpl extends ServiceImpl<SclassMapper, Sclass> implemen
         Integer result=this.baseMapper.deleteById(classId);
         if(result>0){
             Integer userId= UserUtils.getUserInfo();
-            Affair affair = new Affair();
-            affair.setRecordUserId(userId);
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedCurrentTime = now.format(formatter);
-            affair.setAffairTime(formattedCurrentTime);
-            affair.setDescription(aClass.getClassName()+"班级信息删除");
-            affairService.commitAffair(affair);
+            affairService.commitAffair(userId,aClass.getClassName()+"班级数据删除","2",classId);
             return true;
         }else{
             return false;
@@ -58,15 +51,8 @@ public class ClassServiceImpl extends ServiceImpl<SclassMapper, Sclass> implemen
     public boolean updateClass(Sclass sclass) {
        Integer result=this.baseMapper.updateById(sclass);
        if(result>0){
-           Integer userId= UserUtils.getUserInfo();
-           Affair affair = new Affair();
-           affair.setRecordUserId(userId);
-           LocalDateTime now = LocalDateTime.now();
-           DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-           String formattedCurrentTime = now.format(formatter);
-           affair.setAffairTime(formattedCurrentTime);
-           affair.setDescription(sclass.getClassName()+"班级数据更新");
-           affairService.commitAffair(affair);
+              Integer userId= UserUtils.getUserInfo();
+                affairService.commitAffair(userId,sclass.getClassName()+"班级数据更新","2",sclass.getClassId());
            return true;
        }else{
            return false;

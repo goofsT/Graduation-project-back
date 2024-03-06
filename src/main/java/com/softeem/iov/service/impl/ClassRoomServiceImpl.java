@@ -60,25 +60,11 @@ public class ClassRoomServiceImpl extends ServiceImpl<ClassRoomMapper, ClassRoom
         if(result > 0) {
             if(oldStatus.equals("2") && !status.equals("2")){
                 Integer userId= UserUtils.getUserInfo();
-                Affair affair = new Affair();
-                affair.setRecordUserId(userId);
-                LocalDateTime now = LocalDateTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                String formattedCurrentTime = now.format(formatter);
-                affair.setAffairTime(formattedCurrentTime);
-                affair.setDescription(room.getRoomName()+"教室维修完成");
-                affairService.commitAffair(affair);
+                affairService.commitAffair(userId,room.getRoomName()+"教室维修完成","1",roomId);
             }
             if(status.equals("2")){
                 Integer userId= UserUtils.getUserInfo();
-                Affair affair = new Affair();
-                affair.setRecordUserId(userId);
-                LocalDateTime now = LocalDateTime.now();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                String formattedCurrentTime = now.format(formatter);
-                affair.setAffairTime(formattedCurrentTime);
-                affair.setDescription(room.getRoomName()+"教室状态设置为维修");
-                affairService.commitAffair(affair);
+                affairService.commitAffair(userId,room.getRoomName()+"教室需要维修","1",roomId);
             }
             return true;
         }else{

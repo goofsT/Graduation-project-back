@@ -1,6 +1,7 @@
 package com.softeem.iov.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.softeem.iov.auth.UserUtils;
 import com.softeem.iov.entity.Affair;
 import com.softeem.iov.entity.User;
 import com.softeem.iov.mapper.UserMapper;
@@ -35,6 +36,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public User getUserById(Integer id) {
         return this.baseMapper.selectById(id);
+    }
+
+    @Override
+    public User getUserByUserName(String username) {
+        return this.baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
     }
 
     @Override
@@ -91,17 +97,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public Boolean setRole(Integer userId, String permission) {
         User user = this.baseMapper.selectById(userId);
-        user.setPremission(permission);
+        user.setPermission(permission);
         int update = this.baseMapper.updateById(user);
         if(update>0) {
-            Affair affair = new Affair();
-            affair.setRecordUserId(userId);
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedCurrentTime = now.format(formatter);
-            affair.setAffairTime(formattedCurrentTime);
-            affair.setDescription(user.getRealname()+"用户权限设置为"+this.getPermission(permission));
-            affairService.commitAffair(affair);
+            Integer userId1 = UserUtils.getUserInfo();
+            affairService.commitAffair(userId1, user.getRealname() + "用户权限更新", "5", user.getId());
             return true;
         }else{
             return false;

@@ -54,27 +54,13 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
                 if(oldStatus.equals("2")&& !deviceStatus.equals("2")){
                     Integer userId= UserUtils.getUserInfo();
                     if(userId!=null){
-                        Affair affair = new Affair();
-                        affair.setRecordUserId(userId);
-                        LocalDateTime now = LocalDateTime.now();
-                        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                        String formattedCurrentTime = now.format(formatter);
-                        affair.setAffairTime(formattedCurrentTime);
-                        affair.setDescription(device.getDeviceName()+"设备维修完成");
-                        affairService.commitAffair(affair);
+                        affairService.commitAffair(userId,device.getDeviceName()+"设备维修完成","0",deviceId);
                     }
                 }
                if(deviceStatus.equals("2")){
                    Integer userId= UserUtils.getUserInfo();
                    if(userId!=null){
-                       Affair affair = new Affair();
-                       affair.setRecordUserId(userId);
-                       LocalDateTime now = LocalDateTime.now();
-                       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-                       String formattedCurrentTime = now.format(formatter);
-                       affair.setAffairTime(formattedCurrentTime);
-                       affair.setDescription(device.getDeviceName()+"设备状态设置为维修");
-                       affairService.commitAffair(affair);
+                          affairService.commitAffair(userId,device.getDeviceName()+"设备需要维修","0",deviceId);
                    }
                }
                 return true;
@@ -91,15 +77,10 @@ public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> impleme
         Device d=this.getById(deviceId);
         Integer result=baseMapper.deleteById(deviceId);
         if(result>0) {
-            Affair affair = new Affair();
             Integer userId= UserUtils.getUserInfo();
-            affair.setRecordUserId(userId);
-            LocalDateTime now = LocalDateTime.now();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            String formattedCurrentTime = now.format(formatter);
-            affair.setAffairTime(formattedCurrentTime);
-            affair.setDescription(d.getDeviceName()+"设备被删除");
-            affairService.commitAffair(affair);
+            if(userId!=null){
+                affairService.commitAffair(userId,d.getDeviceName()+"设备被删除","0",deviceId);
+            }
             return true;
         }else{
             return false;

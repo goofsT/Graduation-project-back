@@ -66,8 +66,15 @@ public class UserController {
         user.setRealname(registerBody.realname);
         user.setTelphone(registerBody.telphone);
         user.setCardnum(registerBody.cardnum);
+        user.setPermission("1");
+        System.out.println(user);
+        User user1 =userService.getUserByUserName(user.getUsername());
+        if(user1!=null){
+            return ResponseData.error(400,"用户名已存在");
+        }else{
+
+        }
         String msg=userService.register(user);
-        //判断用户是否存在
         if(msg.equals("用户已存在")||msg.equals("注册失败")){
             return ResponseData.error(400,msg);
         }else{
@@ -101,7 +108,7 @@ public class UserController {
 
     @PostMapping("/setRole")
     public ResponseData<User> setRole(@RequestBody User user){
-        Boolean result=userService.setRole(user.getId(),user.getPremission());
+        Boolean result=userService.setRole(user.getId(),user.getPermission());
         if(result){
             return ResponseData.success(null);
         }else{

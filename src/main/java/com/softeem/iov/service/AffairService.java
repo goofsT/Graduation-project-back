@@ -5,7 +5,7 @@ import com.softeem.iov.entity.Affair;
 
 public interface AffairService extends IService<Affair> {
     //提交事务
-    void commitAffair(Affair affair);
+    Boolean commitAffair(Integer recordUserId,String description,String affairType,Integer affairTypeId);
 
     //根据事务id查询事务
     Affair selectAffairById(Integer id);

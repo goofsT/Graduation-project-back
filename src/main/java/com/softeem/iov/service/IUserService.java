@@ -17,6 +17,8 @@ public interface IUserService extends IService<User> {
 
     User getUserById(Integer id);
 
+    User getUserByUserName(String username);
+
     User login(String username, String password);
 
     //注册

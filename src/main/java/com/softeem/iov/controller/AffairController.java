@@ -29,11 +29,11 @@ public class AffairController {
         return ResponseData.success(affairList);
     }
 
-    @PostMapping("/commitAffair")
-    public ResponseData<User> commitAffair(@Valid @RequestBody Affair affair){
-        affairService.commitAffair(affair);
-        return ResponseData.success(null);
-    }
+//    @PostMapping("/commitAffair")
+//    public ResponseData<User> commitAffair(@Valid @RequestBody Affair affair){
+//        affairService.commitAffair(affair);
+//        return ResponseData.success(null);
+//    }
 
     @PostMapping("/updateAffairStatus")
     public ResponseData<User> updateAffair(){
