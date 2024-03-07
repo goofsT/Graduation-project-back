@@ -12,6 +12,7 @@ import com.softeem.iov.service.AffairService;
 import com.softeem.iov.service.ClassRoomService;
 import com.softeem.iov.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,10 +21,16 @@ import java.util.List;
 
 @Service
 public class ClassRoomServiceImpl extends ServiceImpl<ClassRoomMapper, ClassRoom> implements ClassRoomService {
-    @Autowired
     private CourseService courseService;
-    @Autowired
     private AffairService affairService;
+    @Autowired
+    public void setAffairService(@Lazy AffairService affairService) {
+        this.affairService = affairService;
+    }
+    @Autowired
+    public void setCourseService(CourseService courseService) {
+        this.courseService = courseService;
+    }
 
     @Override
     public List getAllClassRoomInfo() {
@@ -50,10 +57,11 @@ public class ClassRoomServiceImpl extends ServiceImpl<ClassRoomMapper, ClassRoom
 
     //更新单个教室状态 status: 0-未使用 1-使用中 2-维修
     @Override
-    public boolean updateOneClassRoomStatus(Integer roomId, String status) {
+    public boolean updateOneClassRoomStatus(Integer roomId, String status,Integer studentNum) {
         ClassRoom classRoom = new ClassRoom();
         classRoom.setRoomId(roomId);
         classRoom.setStatus(status);
+        classRoom.setStudentNum(studentNum);
         ClassRoom room=this.getOneClass(roomId);
         String oldStatus=room.getStatus();
         Integer result = baseMapper.updateById(classRoom);
@@ -77,6 +85,7 @@ public class ClassRoomServiceImpl extends ServiceImpl<ClassRoomMapper, ClassRoom
         ClassRoom classRoom = new ClassRoom();
         classRoom.setRoomId(roomId);
         classRoom.setStatus("0");
+        classRoom.setStudentNum(0);
         return baseMapper.updateById(classRoom) > 0;
     }
 

@@ -7,14 +7,19 @@ import com.softeem.iov.mapper.TeacherMapper;
 import com.softeem.iov.service.AffairService;
 import com.softeem.iov.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> implements TeacherService {
+
+    private AffairService affairService;
     @Autowired
-    AffairService affairService;
+    public void setAffairService(@Lazy AffairService affairService) {
+        this.affairService = affairService;
+    }
     @Override
     public Teacher getTeacherById(Integer teacherId) {
         return baseMapper.selectById(teacherId);

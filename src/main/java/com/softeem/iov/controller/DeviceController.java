@@ -47,4 +47,14 @@ public class DeviceController {
             return ResponseData.error(400,"删除失败");
         }
     }
+
+    @GetMapping("/getDeviceById")
+    public ResponseData<Device> getDeviceById(@RequestParam Integer deviceId){
+        Device device = deviceService.getById(deviceId);
+        if(device!=null) {
+            return ResponseData.success(device);
+        }else{
+            return ResponseData.error(400,"未查询到设备");
+        }
+    }
 }

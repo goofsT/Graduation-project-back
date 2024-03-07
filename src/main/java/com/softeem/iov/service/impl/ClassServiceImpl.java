@@ -17,8 +17,11 @@ import java.util.List;
 
 @Service
 public class ClassServiceImpl extends ServiceImpl<SclassMapper, Sclass> implements ClassService {
+    private AffairService affairService;
     @Autowired
-    AffairService affairService;
+    public void setAffairService(AffairService affairService) {
+        this.affairService = affairService;
+    }
     @Override
     public List<Sclass> getAllClass() {
         return this.baseMapper.selectList(null);

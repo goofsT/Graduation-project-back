@@ -20,6 +20,9 @@ public interface CourseService extends IService<Course> {
     //获取当前时间段的课程信息
     public List getCourseByNow();
 
+    //获取今日课程信息
+    public List getCourseByToday();
+
     public List getCourseBySoon();
 
     //删除课程

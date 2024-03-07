@@ -44,6 +44,16 @@ public class ClassRoomController {
         return ResponseData.success(classRoomService.getOneClass(roomId));
     }
 
+    @GetMapping("/getClassRoomById")
+    public ResponseData getClassRoomById(@RequestParam Integer roomId) {
+        ClassRoom classRoom = classRoomService.getOneClass(roomId);
+        if(classRoom!=null) {
+            return ResponseData.success(classRoom);
+        }else{
+            return ResponseData.error(400,"未查询到教室");
+        }
+    }
+
     //获取某一层的教室
     @RequestMapping("/getClassRoomByFloor")
     public ResponseData getClassRoomByFloor(Integer building, String floor) {
@@ -68,7 +78,7 @@ public class ClassRoomController {
 
     @PostMapping("/updateClassRoomStatus")
     public ResponseData updateClassRoomStatus(@RequestBody ClassRoom classRoom) {
-        Boolean res = classRoomService.updateOneClassRoomStatus(classRoom.getRoomId(), classRoom.getStatus());
+        Boolean res = classRoomService.updateOneClassRoomStatus(classRoom.getRoomId(), classRoom.getStatus(), classRoom.getStudentNum());
         if (res) {
             return ResponseData.success(null);
         } else {

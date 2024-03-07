@@ -1,32 +1,23 @@
 package com.softeem.iov.service.impl;
-
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.softeem.iov.auth.AuthenticationService;
 import com.softeem.iov.auth.UserUtils;
-import com.softeem.iov.entity.Affair;
 import com.softeem.iov.entity.Device;
-import com.softeem.iov.entity.User;
 import com.softeem.iov.mapper.DeviceMapper;
 import com.softeem.iov.service.AffairService;
 import com.softeem.iov.service.DeviceService;
-import com.softeem.iov.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
 public class DeviceServiceImpl extends ServiceImpl<DeviceMapper, Device> implements DeviceService {
-    @Autowired
     private AffairService affairService;
     @Autowired
-    private IUserService userService;
-    @Autowired
-    private AuthenticationService authenticationService;
+    public DeviceServiceImpl(@Lazy AffairService affairService) {
+        this.affairService = affairService;
+    }
     @Override
     public List<Device> getAllDevice() {
         List device= baseMapper.selectList(null);

@@ -25,8 +25,11 @@ import java.util.List;
  */
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IUserService {
-    @Autowired
     private AffairService affairService;
+    @Autowired
+    public void setAffairService(AffairService affairService) {
+        this.affairService = affairService;
+    }
     @Override
     public List<User> getUserList() {
         List<User> userList = this.baseMapper.selectList(null);

@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -18,22 +19,39 @@ public class AffairController {
     @Autowired
     private AffairService affairService;
 
-    @GetMapping("/getAffair")
+    @GetMapping("/getAffairs")
     public ResponseData<List<Affair>> getAffair(){
-        List<Affair> affairList = affairService.list();
-        if(affairList == null){
-            return ResponseData.error(500, "查询失败");
-        }else if(affairList.size() == 0){
-            return ResponseData.error(500, "查询结果为空");
+        List<Affair> affairList = affairService.getAllAffairs();
+        if(affairList==null){
+            return ResponseData.success(new ArrayList<>(0));
+        }else{
+            return ResponseData.success(affairList);
         }
-        return ResponseData.success(affairList);
     }
 
-//    @PostMapping("/commitAffair")
-//    public ResponseData<User> commitAffair(@Valid @RequestBody Affair affair){
-//        affairService.commitAffair(affair);
-//        return ResponseData.success(null);
-//    }
+    @GetMapping("/getTodayAffairs")
+    public ResponseData<List<Affair>> getTodayAffairs(){
+        List<Affair> affairList = affairService.getTodayAffairs();
+        if(affairList==null){
+            return ResponseData.success(new ArrayList<>(0));
+        }else{
+            return ResponseData.success(affairList);
+        }
+    }
+
+    @PostMapping("/deleteAffair")
+    public ResponseData deleteAffair(@RequestBody Affair affair){
+        Boolean result=affairService.removeById(affair.getAffairId());
+        if(result){
+            return ResponseData.success(null);
+        }else{
+            return ResponseData.error(500, "删除失败");
+        }
+    }
+
+
+
+
 
     @PostMapping("/updateAffairStatus")
     public ResponseData<User> updateAffair(){

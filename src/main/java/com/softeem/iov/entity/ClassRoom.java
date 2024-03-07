@@ -12,7 +12,7 @@ public class ClassRoom implements Serializable {
     @TableId(type = IdType.AUTO)
     private Integer roomId;
     private String roomName;
-    private String studentNum;
+    private Integer studentNum;
     private String floorNum;
     private String buildingId;
 
@@ -45,11 +45,11 @@ public class ClassRoom implements Serializable {
         this.roomName = roomName;
     }
 
-    public String getStudentNum() {
+    public Integer getStudentNum() {
         return studentNum;
     }
 
-    public void setStudentNum(String studentNum) {
+    public void setStudentNum(Integer studentNum) {
         this.studentNum = studentNum;
     }
 

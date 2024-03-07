@@ -24,13 +24,21 @@ import java.util.List;
 
 @Service
 public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> implements CourseService {
-
+    private TeacherService teacherService;
+    private AffairService affairService;
+    private ClassService classService;
     @Autowired
-    TeacherService teacherService;
+    public void setTeacherService(TeacherService teacherService) {
+        this.teacherService = teacherService;
+    }
     @Autowired
-    AffairService affairService;
+    public void setAffairService(AffairService affairService) {
+        this.affairService = affairService;
+    }
     @Autowired
-    ClassService classService;
+    public void setClassService(ClassService classService) {
+        this.classService = classService;
+    }
     @Override
     public List getAllCourseInfo() {
         return baseMapper.selectList(null);
@@ -79,6 +87,28 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
         queryWrapper.le("course_time_start", calendar.getTime());
         queryWrapper.ge("course_time_end", calendar.getTime());
+        List<Course> courses = baseMapper.selectList(queryWrapper);
+        if(courses.size() != 0){
+            courses.forEach(course -> {
+                course.setTeacher(teacherService.getTeacherById(course.getTeacherId()));
+                course.setSclass(classService.getClassById(course.getClassId()));
+            });
+        }
+        return courses;
+    }
+
+    @Override
+    public List getCourseByToday() {
+        // 获取当前日期
+        LocalDateTime now = LocalDateTime.now();
+        // 获取今天的日期
+        LocalDateTime today = LocalDateTime.of(now.toLocalDate(), LocalTime.MIN);
+        // 获取明天的日期
+        LocalDateTime tomorrow = today.plusDays(1);
+        // 获取今天的课程信息
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
+        queryWrapper.le("course_time_start", java.sql.Timestamp.valueOf(tomorrow));
+        queryWrapper.ge("course_time_end", java.sql.Timestamp.valueOf(today));
         List<Course> courses = baseMapper.selectList(queryWrapper);
         if(courses.size() != 0){
             courses.forEach(course -> {
@@ -138,7 +168,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         Integer result = baseMapper.deleteById(courseId);
         if(result > 0){
             Integer userId= UserUtils.getUserInfo();
-            affairService.commitAffair(userId,c.getCourseName()+"课程信息删除","4",courseId);
+            affairService.commitAffair(userId,"上课时间为"+c.getCourseTimeStart()+"的"+c.getCourseName()+"课程信息删除","4",courseId);
             return true;
         }else{
             return false;
@@ -150,7 +180,7 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         Integer result = baseMapper.insert(course);
         if(result > 0){
             Integer userId= UserUtils.getUserInfo();
-            affairService.commitAffair(userId,course.getCourseName()+"课程信息添加","4",course.getCourseId());
+            affairService.commitAffair(userId,"上课时间为"+course.getCourseTimeStart()+"的"+course.getCourseName()+"课程信息添加","4",course.getCourseId());
             return true;
         }else{
             return false;
@@ -159,10 +189,21 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     @Override
     public boolean updateCourse(Course course) {
+        Course c= this.getOneCourse(course.getCourseId());
         Integer result = baseMapper.updateById(course);
+        //如果更换了教室，且有相关事务，则删除相关更新教室的事务
+        if(c.getRoomId()!=course.getRoomId()){
+            System.out.println("更换教室");
+            affairService.getAffairByTypeId(course.getCourseId()).forEach(affair -> {
+                if(affair.getDescription().contains("更换教室")){
+                    affairService.deleteAffairById(affair.getAffairId());
+                }
+            });
+        }
         if(result > 0){
             Integer userId= UserUtils.getUserInfo();
-            affairService.commitAffair(userId,course.getCourseName()+"课程信息更新","4",course.getCourseId());
+
+            affairService.commitAffair(userId,"上课时间为"+course.getCourseTimeStart()+"的"+course.getCourseName()+"课程信息更新","4",course.getCourseId());
             return true;
         }else{
             return false;

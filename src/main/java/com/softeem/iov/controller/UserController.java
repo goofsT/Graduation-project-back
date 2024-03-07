@@ -67,7 +67,6 @@ public class UserController {
         user.setTelphone(registerBody.telphone);
         user.setCardnum(registerBody.cardnum);
         user.setPermission("1");
-        System.out.println(user);
         User user1 =userService.getUserByUserName(user.getUsername());
         if(user1!=null){
             return ResponseData.error(400,"用户名已存在");

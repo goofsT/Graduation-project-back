@@ -33,6 +33,18 @@ public class Affair implements Serializable {
     @TableField(exist = false)
     private User recordUser;
 
+    @TableField(exist = false)
+    private Teacher teacher;
+
+    @TableField(exist = false)
+    private Course course;
+
+    @TableField(exist = false)
+    private Sclass sclass;
+
+    @TableField(exist = false)
+    private User user;
+
     @Override
     public String toString() {
         return "Affair{" +
@@ -45,6 +57,10 @@ public class Affair implements Serializable {
                 ", device=" + device +
                 ", classRoom=" + classRoom +
                 ", recordUser=" + recordUser +
+                ", teacher=" + teacher +
+                ", course=" + course +
+                ", sclass=" + sclass +
+                ", user=" + user +
                 '}';
     }
 
@@ -111,4 +127,21 @@ public class Affair implements Serializable {
     public void setRecordUser(User recordUser) {
         this.recordUser = recordUser;
     }
+
+    public Teacher getTeacher() {return teacher;}
+
+    public void setTeacher(Teacher teacher) {this.teacher = teacher;}
+
+    public Course getCourse() {return course;}
+
+    public void setCourse(Course course) {this.course = course;}
+
+    public Sclass getSclass() {return sclass;}
+
+    public void setSclass(Sclass sclass) {this.sclass = sclass;}
+
+    public User getUser() {return user;}
+
+    public void setUser(User user) {this.user = user;}
+
 }
