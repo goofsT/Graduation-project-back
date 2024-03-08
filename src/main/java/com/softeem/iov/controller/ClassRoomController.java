@@ -91,4 +91,28 @@ public class ClassRoomController {
         List<ClassRoom> classRooms = classRoomService.getClassRoomFreeByTime(time);
         return ResponseData.success(classRooms);
     }
+
+    @GetMapping("/getRoomNumInfo")
+    public ResponseData<Object> getRoomNumInfo(){
+        //返回教室总数和正在使用的教室数量
+        List<ClassRoom> rooms = classRoomService.getAllClassRoomInfo();
+        List<ClassRoom> freeRooms = classRoomService.getRoomIsUse();
+        Object result = new Object(){
+            public Integer roomNum = rooms.size();
+            public Integer freeRoomNum = freeRooms.size();
+        };
+        return ResponseData.success(result);
+    }
+
+    @GetMapping("/getRoomSoonCourse")
+    public ResponseData getRoomSoonCourse(@RequestParam Integer roomId){
+        Course course = classRoomService.getRoomSoonCourse(roomId);
+        if(course!=null){
+            return ResponseData.success(course);
+        }else{
+            return ResponseData.error(400,"未查询到课程");
+        }
+    }
+
+
 }

@@ -57,4 +57,16 @@ public class DeviceController {
             return ResponseData.error(400,"未查询到设备");
         }
     }
+
+    @GetMapping("/getDeviceNumInfo")
+    public ResponseData<Object> getDeviceNumInfo(){
+        //返回设备总数和维修设备总数
+        List deviceList=deviceService.getAllDevice();
+        List repairDeviceList=deviceService.getAllRepairDevice();
+        Object result = new Object(){
+            public Integer deviceNum = deviceList.size();
+            public Integer repairNum = repairDeviceList.size();
+        };
+        return ResponseData.success(result);
+    }
 }

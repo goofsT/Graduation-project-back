@@ -163,6 +163,28 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
     }
 
     @Override
+    public List getCourseByTodayNotStart() {
+        // 获取当前日期时间
+        LocalDateTime now = LocalDateTime.now();
+        // 获取今天的日期的开始时间
+        LocalDateTime today = LocalDateTime.of(now.toLocalDate(), LocalTime.MIN);
+        // 获取明天的日期的开始时间
+        LocalDateTime tomorrow = today.plusDays(1);
+        // 获取今天未开始的课程信息
+        QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
+        queryWrapper.gt("course_time_start", java.sql.Timestamp.valueOf(now)); // 修正为大于当前时间
+        queryWrapper.lt("course_time_start", java.sql.Timestamp.valueOf(tomorrow));
+        List<Course> courses = baseMapper.selectList(queryWrapper);
+        if(courses.size() != 0){
+            courses.forEach(course -> {
+                course.setTeacher(teacherService.getTeacherById(course.getTeacherId()));
+                course.setSclass(classService.getClassById(course.getClassId()));
+            });
+        }
+        return courses;
+    }
+
+    @Override
     public boolean deleteCourse(Integer courseId) {
         Course c= this.getOneCourse(courseId);
         Integer result = baseMapper.deleteById(courseId);
@@ -193,7 +215,6 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         Integer result = baseMapper.updateById(course);
         //如果更换了教室，且有相关事务，则删除相关更新教室的事务
         if(c.getRoomId()!=course.getRoomId()){
-            System.out.println("更换教室");
             affairService.getAffairByTypeId(course.getCourseId()).forEach(affair -> {
                 if(affair.getDescription().contains("更换教室")){
                     affairService.deleteAffairById(affair.getAffairId());
@@ -202,7 +223,6 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
         }
         if(result > 0){
             Integer userId= UserUtils.getUserInfo();
-
             affairService.commitAffair(userId,"上课时间为"+course.getCourseTimeStart()+"的"+course.getCourseName()+"课程信息更新","4",course.getCourseId());
             return true;
         }else{

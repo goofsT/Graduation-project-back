@@ -151,4 +151,68 @@ public class AffairServiceImpl extends ServiceImpl<AffairMapper, Affair> impleme
         return result;
     }
 
+    @Override
+    public List<Affair> getAffairByWeek() {
+        //获取本周的日期 判断事务的日期是否在本周内
+        LocalDate now = LocalDate.now();
+        LocalDate start = now.minusDays(now.getDayOfWeek().getValue() - 1);
+        LocalDate end = now.plusDays(7 - now.getDayOfWeek().getValue());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        List<Affair> affairList = this.getAllAffairs();
+        List<Affair> newList=new ArrayList<>();
+        if(affairList == null) {
+            return new ArrayList<>(0);
+        } else {
+            if(affairList.size() == 0) {
+                return new ArrayList<>(0);
+            } else {
+                affairList.forEach(affair -> {
+                    LocalDateTime dateTime = LocalDateTime.parse(affair.getAffairTime(), formatter);
+                    boolean isThisWeek = dateTime.toLocalDate().isAfter(start) && dateTime.toLocalDate().isBefore(end);
+                    if(isThisWeek){
+                        newList.add(affair);
+                    }
+                });
+                return newList;
+            }
+        }
+    }
+
+    @Override
+    public List<Affair> getAffairByDate(String date) {
+       //date格式为：yyyy-MM-dd
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime start = LocalDateTime.parse(date+" 00:00:00", formatter);
+        LocalDateTime end = LocalDateTime.parse(date+" 23:59:59", formatter);
+        QueryWrapper<Affair> wrapper = new QueryWrapper<>();
+        wrapper.between("affair_time",start,end);
+        List<Affair> affairList = baseMapper.selectList(wrapper);
+        if(affairList == null) {
+            return new ArrayList<>(0);
+        } else {
+            if(affairList.size() == 0) {
+                return new ArrayList<>(0);
+            } else {
+                affairList.forEach(affair -> {
+                    User user = userService.getUserById(affair.getRecordUserId());
+                    affair.setRecordUser(user);
+                    if(affair.getAffairType().equals("0")) {
+                        affair.setDevice(deviceService.selectDeviceById(affair.getAffairTypeId()));
+                    } else if(affair.getAffairType().equals("1")) {
+                        affair.setClassRoom(classRoomService.getOneClass(affair.getAffairTypeId()));
+                    }else if(affair.getAffairType().equals("2")) {
+                        affair.setSclass(classService.getClassById(affair.getAffairTypeId()));
+                    }else if(affair.getAffairType().equals("3")) {
+                        affair.setTeacher(teacherService.getTeacherById(affair.getAffairTypeId()));
+                    }else if(affair.getAffairType().equals("4")) {
+                        affair.setCourse(courseService.getOneCourse(affair.getAffairTypeId()));
+                    }else{
+                        affair.setUser(userService.getUserById(affair.getAffairTypeId()));
+                    }
+                });
+                return affairList;
+            }
+        }
+    }
+
 }

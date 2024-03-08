@@ -19,10 +19,15 @@ public interface AffairService extends IService<Affair> {
 
     //获取今日事务
     List<Affair> getTodayAffairs();
+
     //更新事务时间为当前时间
     Boolean updateAffairTimeByNow(Integer affairId);
 
     //获取今日关于某个类型的事务
     List<Affair> getAffairByTypeId(Integer typeId);
 
+    //获取本周事务
+    List<Affair> getAffairByWeek();
+
+    List<Affair> getAffairByDate(String date);
 }

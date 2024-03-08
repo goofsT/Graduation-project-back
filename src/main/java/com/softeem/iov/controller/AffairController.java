@@ -39,6 +39,17 @@ public class AffairController {
         }
     }
 
+    @GetMapping("/getAffairByDate")
+    public ResponseData<List<Affair>> getAffairByDate(@RequestParam String date){
+        List<Affair> affairList = affairService.getAffairByDate(date);
+        if(affairList==null){
+            return ResponseData.success(new ArrayList<>(0));
+        }else{
+            return ResponseData.success(affairList);
+        }
+    }
+
+
     @PostMapping("/deleteAffair")
     public ResponseData deleteAffair(@RequestBody Affair affair){
         Boolean result=affairService.removeById(affair.getAffairId());
@@ -51,11 +62,21 @@ public class AffairController {
 
 
 
-
-
     @PostMapping("/updateAffairStatus")
     public ResponseData<User> updateAffair(){
         return ResponseData.success(null);
+    }
+
+    @GetMapping("/getAffairNumInfo")
+    public ResponseData<Object> getAffairNumInfo(){
+       //返回本周事务数量和今日事务数量
+        List<Affair> affairsWeek = affairService.getAffairByWeek();
+        List<Affair> affairsToday = affairService.getTodayAffairs();
+        Object result = new Object(){
+            public Integer weekNum = affairsWeek.size();
+            public Integer todayNum = affairsToday.size();
+        };
+        return ResponseData.success(result);
     }
 
 }

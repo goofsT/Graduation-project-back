@@ -25,6 +25,9 @@ public interface CourseService extends IService<Course> {
 
     public List getCourseBySoon();
 
+    //获取今天未开始的课程
+    public List getCourseByTodayNotStart();
+
     //删除课程
     public boolean deleteCourse(Integer courseId);
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -123,5 +124,28 @@ public class ClassRoomServiceImpl extends ServiceImpl<ClassRoomMapper, ClassRoom
         return classRooms;
     }
 
+    @Override
+    public List<ClassRoom> getRoomIsUse() {
+        List<ClassRoom> rooms=new ArrayList<ClassRoom>(0);
+        LambdaQueryWrapper<ClassRoom> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ClassRoom::getStatus, 1);
+        queryWrapper.notLike(ClassRoom::getRoomName, "走廊");
+        List result = baseMapper.selectList(queryWrapper);
+        if(result!=null){
+           return result;
+        }
+        return rooms;
+    }
+
+    @Override
+    public Course getRoomSoonCourse(Integer roomId) {
+        List<Course> courses = courseService.getCourseBySoon();
+        for (int i = 0; i < courses.size(); i++) {
+            if (courses.get(i).getRoomId().equals(roomId)) {
+                return courses.get(i);
+            }
+        }
+        return null;
+    }
 
 }

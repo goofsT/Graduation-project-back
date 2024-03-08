@@ -30,10 +30,10 @@ public class ClassRoomStatusUpdater {
         this.classRoomService = classRoomService;
     }
 
-    @Scheduled(fixedRate = 60000) // 每分钟执行一次  定时根据课程表更新教室状态
+    @Scheduled(fixedRate = 30000) // 每分钟执行一次  定时根据课程表更新教室状态
     public void updateClassRoomStatus() {
         List<Course> coursesToUpdate = courseService.getCourseByNow();
-        List<Course> todayCourses = courseService.getCourseByToday();
+        List<Course> todayCourses = courseService.getCourseByTodayNotStart();
         List<ClassRoom> classRooms = classRoomService.getAllClassRoomInfo();
         classRooms.forEach(room -> {
             if (!"2".equals(room.getStatus())) { // 检查教室是否不在维修状态

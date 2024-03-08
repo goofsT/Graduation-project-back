@@ -20,4 +20,5 @@ public interface ClassService extends IService<Sclass> {
     //修改班级信息
     boolean updateClass(Sclass sclass);
 
+
 }

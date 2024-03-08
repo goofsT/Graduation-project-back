@@ -2,6 +2,7 @@ package com.softeem.iov.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.softeem.iov.entity.ClassRoom;
+import com.softeem.iov.entity.Course;
 
 import java.util.List;
 
@@ -23,4 +24,9 @@ public interface ClassRoomService extends IService<ClassRoom> {
 
     //某时段空间教室
     List <ClassRoom> getClassRoomFreeByTime(String  time);
+
+    List<ClassRoom> getRoomIsUse();
+
+    //获取教室今日即将使用的课程
+    Course getRoomSoonCourse(Integer roomId);
 }
