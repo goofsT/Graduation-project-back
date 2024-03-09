@@ -37,4 +37,5 @@ public interface CourseService extends IService<Course> {
     //修改课程信息
     public boolean updateCourse(Course course);
 
+    void updateCourseTimes();
 }

@@ -229,4 +229,9 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
             return false;
         }
     }
+
+    @Override
+    public void updateCourseTimes() {
+        baseMapper.updateCourseTimes();
+    }
 }
