@@ -8,6 +8,8 @@ import com.softeem.iov.service.IUserService;
 import com.softeem.iov.utils.ResponseData;
 import com.softeem.iov.utils.TokenResponseData;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,6 +20,8 @@ import java.util.List;
 public class UserController {
     @Autowired
     private  IUserService userService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private AuthenticationService authenticationService;
 
@@ -62,14 +66,14 @@ public class UserController {
     public ResponseData<User> register(@Valid @RequestBody RegisterDTO registerBody){
         User user=new User();
         user.setUsername(registerBody.username);
-        user.setPassword(registerBody.password);
+        user.setPassword(passwordEncoder.encode(registerBody.password));
         user.setRealname(registerBody.realname);
         user.setTelphone(registerBody.telphone);
         user.setCardnum(registerBody.cardnum);
         user.setPermission("1");
-        User user1 =userService.getUserByUserName(user.getUsername());
+        User user1 =userService.getUserByCardNum(user.getCardnum());
         if(user1!=null){
-            return ResponseData.error(400,"用户名已存在");
+            return ResponseData.error(400,"用户已存在");
         }else{
 
         }
@@ -86,7 +90,7 @@ public class UserController {
         User user=new User();
         user.setRealname(resetPwdBody.realname);
         user.setCardnum(resetPwdBody.cardnum);
-        user.setPassword(resetPwdBody.newpassword);
+        user.setPassword(passwordEncoder.encode(resetPwdBody.newpassword));
         String msg=userService.resetPwd(user);
         if(msg=="用户不存在"||msg=="修改失败"){
             return ResponseData.error(400,msg);

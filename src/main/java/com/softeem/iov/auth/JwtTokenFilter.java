@@ -11,13 +11,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class JwtTokenFilter extends OncePerRequestFilter {
-
     private static final String SECRET = "tianbin"; // 替换为实际的密钥
     private static final String TOKEN_PREFIX = "Bearer ";
     private static final String HEADER_STRING = "Authorization";
-
     private AuthenticationService authenticationService = new AuthenticationService();
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
@@ -31,6 +28,14 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }else{
             writeErrorResponse(response, ResponseData.error(403, "Unauthorized token"));
         }
+    }
+
+    private void writeErrorResponse(HttpServletResponse response, ResponseData responseData) throws IOException {
+        response.setStatus(responseData.getCode());
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write(new ObjectMapper().writeValueAsString(responseData));
+        response.getWriter().flush();
     }
 
     /**
@@ -60,12 +65,4 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
     }
 
-
-    private void writeErrorResponse(HttpServletResponse response, ResponseData responseData) throws IOException {
-        response.setStatus(responseData.getCode());
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
-        response.getWriter().write(new ObjectMapper().writeValueAsString(responseData));
-        response.getWriter().flush();
-    }
 }

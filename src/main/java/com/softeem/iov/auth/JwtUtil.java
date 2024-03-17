@@ -8,14 +8,9 @@ import java.util.Date;
 
 
 public class JwtUtil {
-
     private static final String SECRET_KEY = "tianbin"; // 请替换为您自己的密钥
-
     private static final Algorithm ALGORITHM = Algorithm.HMAC256(SECRET_KEY);
-
-    //token过期时间
-    private static final long EXPIRE_TIME = 3600000*24; // 1h
-
+    private static final long EXPIRE_TIME = 3600000*24; // token过期时间24h
     // 生成token
     public static String generateToken(User user) {
         Date expiryDate = new Date(System.currentTimeMillis() + EXPIRE_TIME);

@@ -9,6 +9,7 @@ import com.softeem.iov.service.AffairService;
 import com.softeem.iov.service.IUserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -47,18 +48,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     }
 
     @Override
+    public User getUserByCardNum(String cardNum) {
+        return this.baseMapper.selectOne(new QueryWrapper<User>().eq("cardnum", cardNum));
+    }
+
+    @Override
     public User login(String username, String password) {
         //根据用户名和密码查询用户
-        User user = this.baseMapper.selectOne(new QueryWrapper<User>().eq("username", username).eq("password", password));
-        return user;
+        User user = this.baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+        if(user!=null) {
+            BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+            boolean flag = passwordEncoder.matches(password, user.getPassword());
+            if(flag){
+                return user;
+            }else{
+                return null;
+            }
+        }
+        return null;
+
     }
 
     @Override
     public String register(User user) {
        //判断用户是否已存在
         User user1 = this.baseMapper.selectOne(new QueryWrapper<User>().eq("cardnum",user.getCardnum()));
+        User user2 = this.baseMapper.selectOne(new QueryWrapper<User>().eq("username",user.getUsername()));
         if(user1!=null){
-            return "用户已存在";
+            return "身份证已经注册";
+        }
+        if(user2!=null){
+            return "用户名已经注册";
         }
         //插入用户
         int insert = this.baseMapper.insert(user);
