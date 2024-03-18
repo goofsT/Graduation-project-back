@@ -29,7 +29,6 @@ public class ClassRoomStatusUpdater {
         this.courseService = courseService;
         this.classRoomService = classRoomService;
     }
-
     @Scheduled(fixedRate = 30000) // 每分钟执行一次  定时根据课程表更新教室状态
     public void updateClassRoomStatus() {
         List<Course> coursesToUpdate = courseService.getCourseByNow();
@@ -60,8 +59,7 @@ public class ClassRoomStatusUpdater {
         });
         if(!coursesToUpdate.isEmpty()){
             coursesToUpdate.forEach(course -> {
-                // 更新教室状态为 "1"使用中
-                classRoomService.updateOneClassRoomStatus(course.getRoomId(), "1",classService.getClassById(course.getClassId()).getClassNum());
+                classRoomService.updateOneClassRoomStatus(course.getRoomId(), "1",classService.getClassById(course.getClassId()).getClassNum()); // 更新教室状态为 "1"使用中
             });
         }
     }

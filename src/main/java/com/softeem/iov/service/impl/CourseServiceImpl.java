@@ -121,15 +121,11 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
 
     //获取即将开始的课程信息
     public List getCourseBySoon() {
-        // 获取当前时区的当前日期和时间
         LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
-
-        // 定义课程时间段
         LocalTime[] courseTimes = {
                 LocalTime.of(8, 0), LocalTime.of(9, 0), LocalTime.of(10, 0), LocalTime.of(11, 0),
                 LocalTime.of(14, 0), LocalTime.of(15, 0), LocalTime.of(16, 0), LocalTime.of(17, 0)
         };
-
         // 计算下一个课程的开始时间
         LocalTime nextCourseTime = null;
         for (LocalTime courseTime : courseTimes) {
@@ -138,17 +134,14 @@ public class CourseServiceImpl extends ServiceImpl<CourseMapper, Course> impleme
                 break;
             }
         }
-
         // 如果当前时间不在指定时间段内，处理逻辑
         if (nextCourseTime == null) {
             // 例如，返回空列表或查询次日课程
             return new ArrayList<>();
         }
-
         // 使用下一个课程时间构建查询条件
         LocalDateTime courseTimeStart = LocalDateTime.of(now.toLocalDate(), nextCourseTime);
         LocalDateTime courseTimeEnd = courseTimeStart.plusHours(1);
-
         QueryWrapper<Course> queryWrapper = new QueryWrapper<>();
         queryWrapper.le("course_time_start", java.sql.Timestamp.valueOf(courseTimeStart));
         queryWrapper.ge("course_time_end", java.sql.Timestamp.valueOf(courseTimeEnd));

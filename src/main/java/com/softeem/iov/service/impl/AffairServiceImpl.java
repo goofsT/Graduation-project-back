@@ -168,7 +168,7 @@ public class AffairServiceImpl extends ServiceImpl<AffairMapper, Affair> impleme
             } else {
                 affairList.forEach(affair -> {
                     LocalDateTime dateTime = LocalDateTime.parse(affair.getAffairTime(), formatter);
-                    boolean isThisWeek = dateTime.toLocalDate().isAfter(start) && dateTime.toLocalDate().isBefore(end);
+                    boolean isThisWeek = !dateTime.toLocalDate().isBefore(start) && !dateTime.toLocalDate().isAfter(end);
                     if(isThisWeek){
                         newList.add(affair);
                     }
