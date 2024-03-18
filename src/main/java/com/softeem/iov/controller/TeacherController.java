@@ -23,6 +23,16 @@ public class TeacherController {
         }
     }
 
+    @RequestMapping("/getTeacherByText")
+    public ResponseData getTeacherByText(@RequestParam String text) {
+        List<Teacher> teacherList = teacherService.getTeacherByText(text);
+        if (teacherList != null) {
+            return ResponseData.success(teacherList);
+        } else {
+            return ResponseData.error(400, "查询失败");
+        }
+    }
+
     @RequestMapping("/getAllTeacher")
     public ResponseData getAllTeacher() {
          List<Teacher> teacherList = teacherService.getAllTeacher();

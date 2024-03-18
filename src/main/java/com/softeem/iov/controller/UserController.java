@@ -3,6 +3,7 @@ import com.softeem.iov.auth.AuthenticationService;
 import com.softeem.iov.auth.dtos.LoginDTO;
 import com.softeem.iov.auth.dtos.RegisterDTO;
 import com.softeem.iov.auth.dtos.ResetPwdDTO;
+import com.softeem.iov.entity.Teacher;
 import com.softeem.iov.entity.User;
 import com.softeem.iov.service.IUserService;
 import com.softeem.iov.utils.ResponseData;
@@ -60,6 +61,15 @@ public class UserController {
     }
 
 
+    @RequestMapping("/getUserByText")
+    public ResponseData getTeacherByText(@RequestParam String text) {
+        List<User> UserList = userService.getUserByText(text);
+        if (UserList != null) {
+            return ResponseData.success(UserList);
+        } else {
+            return ResponseData.error(400, "查询失败");
+        }
+    }
 
 
     @PostMapping("/register")

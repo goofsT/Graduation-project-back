@@ -19,6 +19,8 @@ public interface IUserService extends IService<User> {
 
     User getUserByUserName(String username);
 
+    List<User> getUserByText(String text);
+
     User getUserByCardNum(String cardNum);
 
     User login(String username, String password);

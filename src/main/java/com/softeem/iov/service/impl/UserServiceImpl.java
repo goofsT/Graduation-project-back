@@ -3,6 +3,7 @@ package com.softeem.iov.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.softeem.iov.auth.UserUtils;
 import com.softeem.iov.entity.Affair;
+import com.softeem.iov.entity.Teacher;
 import com.softeem.iov.entity.User;
 import com.softeem.iov.mapper.UserMapper;
 import com.softeem.iov.service.AffairService;
@@ -45,6 +46,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public User getUserByUserName(String username) {
         return this.baseMapper.selectOne(new QueryWrapper<User>().eq("username", username));
+    }
+
+    @Override
+    public List<User> getUserByText(String text) {
+        QueryWrapper<User> queryWrapper = new QueryWrapper<>();
+        if (!text.isEmpty()) {
+            queryWrapper.lambda().like(User::getRealname, text);
+        }
+        return baseMapper.selectList(queryWrapper);
     }
 
     @Override

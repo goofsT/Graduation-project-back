@@ -15,4 +15,6 @@ public interface TeacherService extends IService<Teacher> {
     boolean addTeacher(Teacher teacher);
 
     boolean updateTeacher(Teacher teacher);
+
+    List<Teacher> getTeacherByText(String text);
 }

@@ -1,5 +1,6 @@
 package com.softeem.iov.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.softeem.iov.auth.UserUtils;
 import com.softeem.iov.entity.Teacher;
@@ -56,5 +57,14 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
     @Override
     public boolean updateTeacher(Teacher teacher) {
         return baseMapper.updateById(teacher) > 0;
+    }
+
+    @Override
+    public List<Teacher> getTeacherByText(String text) {
+        QueryWrapper<Teacher> queryWrapper = new QueryWrapper<>();
+        if (!text.isEmpty()) {
+            queryWrapper.lambda().like(Teacher::getTeacherName, text);
+        }
+        return baseMapper.selectList(queryWrapper);
     }
 }
