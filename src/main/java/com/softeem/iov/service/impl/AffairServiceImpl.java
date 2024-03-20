@@ -120,6 +120,8 @@ public class AffairServiceImpl extends ServiceImpl<AffairMapper, Affair> impleme
                     LocalDateTime dateTime = LocalDateTime.parse(affair.getAffairTime(), formatter);
                     boolean isToday = dateTime.toLocalDate().equals(today);
                     if(isToday){
+                        User user = userService.getUserById(affair.getRecordUserId());
+                        affair.setUser(user);
                         newList.add(affair);
                     }
                 });

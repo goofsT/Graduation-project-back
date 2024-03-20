@@ -81,14 +81,8 @@ public class UserController {
         user.setTelphone(registerBody.telphone);
         user.setCardnum(registerBody.cardnum);
         user.setPermission("1");
-        User user1 =userService.getUserByCardNum(user.getCardnum());
-        if(user1!=null){
-            return ResponseData.error(400,"用户已存在");
-        }else{
-
-        }
         String msg=userService.register(user);
-        if(msg.equals("用户已存在")||msg.equals("注册失败")){
+        if(msg.contains("已经注册") || msg.contains("失败")){
             return ResponseData.error(400,msg);
         }else{
             return ResponseData.success(user);

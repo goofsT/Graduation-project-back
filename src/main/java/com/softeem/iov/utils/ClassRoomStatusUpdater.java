@@ -45,7 +45,7 @@ public class ClassRoomStatusUpdater {
                         Boolean flag=false;
                         for (Affair affair:arrairs){
                             //判断是否已经存在该教室的维修事务,如果存在则更新时间
-                            if(affair.getAffairTypeId().equals(course.getCourseId())||affair.getDescription().contains("更换教室")){
+                            if(affair.getAffairTypeId().equals(course.getCourseId()) && affair.getDescription().contains("更换教室")){
                                 affairService.updateAffairTimeByNow(affair.getAffairId());
                                 flag=true;
                                 break;
